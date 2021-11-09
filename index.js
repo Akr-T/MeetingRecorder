@@ -1,4 +1,6 @@
 $(function () {
+    $('.droppable-area').css('height', $('.content').height())
+
     $(".download").on("click", function () {
         $(".js").each(function () {
             $(this).remove();
@@ -54,7 +56,57 @@ $(function () {
                 scrollTop: scroll_point
             }, 300);
             $(addTarget).parent().find('.fukidasi').focus();
-        }
+            //set droppable event to fukidasi
+            settingDroppable();
+        },
+        accept: ".participant"
     });
+
+
+    $(".tag").each(function () {
+        $(this).draggable({
+            revert: true,
+            revertDuration: 50,
+            opacity: 0.8,
+        });
+    });
+
+    function settingDroppable() {
+        $(".fukidasi").droppable({
+            drop: function (event, ui) {
+                var addTarget = $(ui.draggable);
+                $(this).removeClass('hw-fukidasi');
+                $(this).removeClass('tbc-fukidasi');
+
+                if (addTarget.hasClass("hw")) {
+                    $(this).addClass('hw-fukidasi');
+                } else if (addTarget.hasClass("tbc")) {
+                    $(this).addClass('tbc-fukidasi');
+                } else {
+                    // no operation
+                }
+            },
+            accept: ".tag"
+        });
+    }
+
+    $('.hw_details').on('toggle', function () {
+        getSmmry('hw');
+    });
+    $('.tbc_details').on('toggle', function () {
+        getSmmry('tbc');
+    });
+    $('.reload').on('click', function () {
+        getSmmry('hw');
+        getSmmry('tbc');
+    })
+    function getSmmry(clazz) {
+        $('.' + clazz + '_details').children('').not('summary').remove();
+        $('.' + clazz + '-fukidasi').each(function () {
+            let cln = $(this).clone();
+            $(cln).attr('contenteditable', 'false');
+            $('.' + clazz + '_details').append(cln);
+        });
+    }
 
 });

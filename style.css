@@ -38,29 +38,29 @@ body {
 }
 
 .header-content {
+    min-height: 150px;
     background-color: whitesmoke;
     background-clip: content-box;
     padding: 20px 5% 20px 5%;
 }
 
 .content {
+    display: flex;
     width: 90%;
     min-height: 60%;
     margin: 15px 5% 15px 5%;
-    background-color: bisque;
 }
 
 footer {
     width: 90%;
     margin: 15px 5% 0 5%;
     position: sticky;
-    background-color: whitesmoke;
     z-index: 999;
     bottom: 0;
 }
 
 .download {
-    height: 50px;
+    height: 30px;
     border-radius: 10px;
     border-style: none;
     width: 100%;
@@ -71,8 +71,8 @@ footer {
     align-items: center;
     align-content: center;
     justify-content: center;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-style: none;
     border-radius: 100%;
     margin: 5px;
@@ -88,8 +88,52 @@ footer {
 }
 
 .droppable-area {
-    width: 100%;
+    width: 90%;
     min-height: 50%;
+    overflow-y: scroll;
+    background-color: bisque;
+    border-radius: 15px;
+}
+
+.tag-area {
+    width: 10%;
+    /* background-color: khaki; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-style: none;
+    border-radius: 100%;
+    margin: 5px;
+    word-break: break-all;
+    position: relative;
+    color: white;
+}
+
+.hw, .hw-fukidasi {
+    background-color: darkgreen !important;
+}
+
+.hw-fukidasi:after {
+    border-right: 12px solid darkgreen !important;
+    ;
+}
+
+.tbc, .tbc-fukidasi {
+    background-color: violet !important;
+}
+
+.tbc-fukidasi:after {
+    border-right: 12px solid violet !important;
+    ;
 }
 
 .dropped {
@@ -101,7 +145,7 @@ footer {
 .wrap {
     display: flex;
     flex-wrap: nowrap;
-    padding: 20px 20px 20px 20px;
+    padding: 10px 10px 10px 10px;
     position: relative !important;
 }
 
@@ -174,4 +218,21 @@ footer {
 
 .round_btn:hover {
     opacity: 60%;
+}
+
+.rld-btn-pos {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 800px) {
+    .fukidasi {
+        max-width: 50%;
+    }
+    .droppable-area {
+        width: 85%;
+    }
+    .tag-area {
+        width: 15%;
+    }
 }
