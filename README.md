@@ -19,3 +19,6 @@ CSSファイルを外部化しているため
 オフライン環境で使用したい場合は
 本プロジェクトをDLし、
 linkタグ内とscriptタグ内を適切に書き換えて使用してください。
+
+以下のURLにアクセスすることで使用することができます。
+https://akr-t.github.io/MeetingRecorder/
