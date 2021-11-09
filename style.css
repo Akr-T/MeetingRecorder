@@ -55,6 +55,7 @@ footer {
     width: 90%;
     margin: 15px 5% 0 5%;
     position: sticky;
+    background-color: whitesmoke;
     z-index: 999;
     bottom: 0;
 }
