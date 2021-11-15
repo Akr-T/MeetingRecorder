@@ -2,55 +2,127 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=800">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
-    <link rel="stylesheet" href="https://akr-t.github.io/MeetingRecorder/style.css">
-    <script class="js" src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script class="js" src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-    <script class="js" src="https://akr-t.github.io/MeetingRecorder/index.js"></script>
-</head>
-<header>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/huebee@2/dist/huebee.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
+        integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
+    <script class="js" src="index.js"></script>
+    <script src="https://unpkg.com/huebee@2/dist/huebee.pkgd.min.js"></script>
 
-</header>
+</head>
 
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="addParticipant">
-                <button class="addBtn">+</button>
-                <input type="text" class="txt">
-                <input type="color" class="clr" value="#FF0000">
+    <div class="header-area">
+        <div class="nm-area header-bg">
+            <input class="nm" type="text">
+        </div>
+        <div class="cl-area header-bg">
+            <div class="color-area">
+                <fieldset class="color-input">
+                    <legend>font color</legend>
+                    <input class="fnt-clr" data-huebee value="#000" />
+                </fieldset>
             </div>
-            <div class="draggable-area">
+            <div class="color-area">
+                <fieldset class="color-input">
+                    <legend>badge color</legend>
+                    <input class="bg-clr" data-huebee value="#929539" />
+                </fieldset>
             </div>
         </div>
-    </div>
-    <div class="content">
-        <div class="droppable-area">
 
+        <div class="add-btn-area header-bg">
+            <div class="add tag-btn">
+                <span class="add tate"></span>
+                <span class="add yoko"></span>
+            </div>
+        </div>
+        <div>
+            <fieldset class="csv-area">
+                <legend>load csv</legend>
+                <input type="file" accept=".csv">
+            </fieldset>
+        </div>
+
+    </div>
+    <div class="badge-area">
+
+    </div>
+    <div class="main-area">
+        <div class="talk-area">
+            <div class="talk-area-head">MEETING TALKLIST</div>
+            <div>
+                <input id="all_sub" type="radio" name="tab_item_sub" checked>
+                <label class="tab_item slct_tab_nav" for="all_sub">総合</label>
+                <input id="hw_sub" type="radio" name="tab_item_sub">
+                <label class="tab_item slct_tab_nav" for="hw_sub">HW</label>
+                <input id="tbd_sub" type="radio" name="tab_item_sub">
+                <label class="tab_item slct_tab_nav" for="tbd_sub">TBD</label>
+                <div class="talk-area-body tab_content" id="all_content">
+                </div>
+            </div>
         </div>
         <div class="tag-area">
-            <span class="tag hw">宿題</span>
-            <span class="tag tbc">決定</span>
+            <div class="tag-area-head">TAG LIST</div>
+            <div class="tag-list">
+                <div class="tag tbd" contenteditable="true">決定</div>
+                <div class="tag hw" contenteditable="true">宿題</div>
+            </div>
+            <div class="tag-list default">
+                <div class="tag" id="reset" contenteditable="true">RESET</div>
+            </div>
+            <!-- <div class="tag-ope">
+                <div class="tag-btn">
+                    <span class="tate"></span>
+                    <span class="yoko"></span>
+                </div>
+            </div> -->
+            <!-- <hr>
+            <div class="tag-area-head">PARTS</div>
+            <div class="tag-list default">
+                <div class="tag" contenteditable="true">WHAT ABOUT</div>
+            </div> -->
         </div>
     </div>
+    <div class="footer-area">
+        <div class="tab-area">
+            <div class="tab">
+                <input id="all" type="radio" name="tab_item" onclick="tab_ctrl(this)" checked>
+                <label class="tab_item" for="all">総合</label>
+            </div>
+            <div class="tab">
+                <input id="hw" type="radio" name="tab_item" onclick="tab_ctrl(this)">
+                <label class="tab_item" for="hw">HW</label>
+            </div>
+            <div class="tab">
+                <input id="tbd" type="radio" name="tab_item" onclick="tab_ctrl(this)">
+                <label class="tab_item" for="tbd">TBD</label>
+            </div>
+        </div>
+        <div class="dl-area">dowload</div>
+    </div>
+    <script>
+        function tab_ctrl(el) {
+            let scrllTrgt = $('input[id$="sub"]').filter(':checked').attr('id');
+            let scrllTrgtId = scrllTrgt.replace("sub", "scrll");
+            //save scroll point
+            $('.' + scrllTrgtId).val($('#all_content').scrollTop());
+
+            $('#' + $(el).attr('id') + '_sub').prop('checked', true)
+            $('.talk-area').css('background-color', $(el).next("label").css('background-color'));
+
+            //scroll bf point
+            $('#all_content').scrollTop($('.' + $(el).attr('id') + '_scrll').val())
+        }
+    </script>
+    <input type="hidden" class="all_scrll">
+    <input type="hidden" class="hw_scrll">
+    <input type="hidden" class="tbd_scrll">
 </body>
-<footer>
-    <div class="rld-btn-pos">
-        <button class="reload">reload</button>
-    </div>
-    <div class="detail-area">
-        <details class="hw_details">
-            <summary class="hw_smmry">宿題事項</summary>
-
-        </details>
-        <details class="tbc_details">
-            <summary class="tbc_smmry">決定事項</summary>
-
-        </details>
-    </div>
-    <button class="download">DOWNLOAD</button>
-</footer>
 
 </html>

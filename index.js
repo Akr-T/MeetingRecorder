@@ -1,33 +1,69 @@
 $(function () {
-    $('.droppable-area').css('height', $('.content').height())
+    //load csv
+    $("input[type='file']").on('change', function () {
+        let file = $(this)[0].files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onerror = function () {
+                alert('ファイル読み取りに失敗しました')
+            }
+            reader.onload = function () {
+                var lineArr = reader.result.split("\r");
+                var itemArr = [];
+                for (var i = 0; i < lineArr.length; i++) {
+                    itemArr[i] = lineArr[i].split(",");
+                    try {
+                        $(".nm").val(itemArr[i][0]);
+                        $(".fnt-clr").val(itemArr[i][1]);
+                        $(".bg-clr").val(itemArr[i][2]);
+                        $(".add-btn-area").click();
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+            reader.readAsText(file);
+        }
+    });
 
-    $(".download").on("click", function () {
+    //download page
+    $(".dl-area").on("click", function () {
         $(".js").each(function () {
             $(this).remove();
         });
+        $("div").each(function () {
+            $(this).attr('contenteditable', 'false');
+        });
+        $("input").not("input[type='radio']").prop('disabled', true);
 
         var snapshot = new XMLSerializer().serializeToString(document);
-
         let blob = new Blob([snapshot], { type: 'text/html' });
         a = document.createElement('a');
         a.download = 'MeetRecord.html';
         a.href = URL.createObjectURL(blob);
         a.click();
+        $("input").not("input[type='radio']").prop('disabled', false);
+
+        $("div").each(function () {
+            $(this).attr('contenteditable', 'true');
+        });
+
     });
 
-    $(".addBtn").on("click", function () {
-        let inptxt = $(".addParticipant").find(".txt");
-        let nm = $(inptxt).val();
-        let inpclr = $(".addParticipant").find(".clr");
-        let clr = $(inpclr).val();
-        let addObj = '<div class="participant" style="background-color: ' + clr + '; ">'
+    //add badge
+    $(".add-btn-area").on("click", function () {
+        let nm = $(".nm").val();
+        let fntclr = $(".fnt-clr").val();
+        let bgclr = $(".bg-clr").val();
+        let addObj = '<span class="badge" style="color:' + fntclr + ';background-color: ' + bgclr + '; ">'
             + nm
-            + '<span class="round_btn"></span></div>';
-        $(addObj).appendTo(".draggable-area");
-        $(inptxt).val("");
+            + '</span>';
+        $(addObj).appendTo(".badge-area");
+        //clear val
+        $(".nm").val("");
 
-        // drag event
-        $(".participant").each(function () {
+        //drg event
+        $(".badge").each(function () {
             $(this).draggable({
                 revert: true,
                 revertDuration: 50,
@@ -35,33 +71,6 @@ $(function () {
             });
         });
     });
-    $(document).on('click', '.round_btn', function () {
-        $(this).parent().remove();
-    });
-
-
-    $(".droppable-area").droppable({
-        drop: function (event, ui) {
-            var addTarget = $(ui.draggable).clone();
-            $(addTarget).find('.round_btn').remove();
-            $(addTarget).addClass('dropped');
-            $(addTarget).appendTo('.droppable-area');
-            $(addTarget).wrap('<div class="wrap" />');
-            $(addTarget).after('<span class="round_btn round_btn_talk"></span>');
-            $(addTarget).after('<div class="fukidasi" contenteditable="true"></div>');
-
-            var scroll_point = $(addTarget).offset().top;
-            var body = $('body');
-            body.animate({
-                scrollTop: scroll_point
-            }, 300);
-            $(addTarget).parent().find('.fukidasi').focus();
-            //set droppable event to fukidasi
-            settingDroppable();
-        },
-        accept: ".participant"
-    });
-
 
     $(".tag").each(function () {
         $(this).draggable({
@@ -71,42 +80,66 @@ $(function () {
         });
     });
 
-    function settingDroppable() {
-        $(".fukidasi").droppable({
-            drop: function (event, ui) {
-                var addTarget = $(ui.draggable);
-                $(this).removeClass('hw-fukidasi');
-                $(this).removeClass('tbc-fukidasi');
 
-                if (addTarget.hasClass("hw")) {
-                    $(this).addClass('hw-fukidasi');
-                } else if (addTarget.hasClass("tbc")) {
-                    $(this).addClass('tbc-fukidasi');
-                } else {
-                    // no operation
+    //remove element
+    $(document).on('click', '.round_btn', function () {
+        $(this).parent().remove();
+    });
+
+    //droppable event
+    $("#all_content").droppable({
+        accept: '.badge',
+        drop: function (event, ui) {
+
+            let addTrgt = $(ui.draggable).clone();
+            //remove class
+            $(addTrgt).removeClass();
+            //remove style
+            $(addTrgt).attr('style', '');
+
+
+            //add target to talk area
+            $(addTrgt).appendTo(this);
+            $(addTrgt).addClass('badge');
+            $(addTrgt).css('color', $(ui.draggable).css('color'));
+            $(addTrgt).css('background-color', $(ui.draggable).css('background-color'));
+            $(addTrgt).wrap('<div class="talk-area-badge" />');
+            $(addTrgt).after('<div class="balloon" contenteditable="true">ADD</div>');
+
+            $(this).animate({
+                scrollTop: $(document).height()
+            }, 300);
+
+            //tag attach setting
+            let balloon = $(addTrgt).parent().children('.balloon');
+            balloon.droppable({
+                accept: ".tag",
+                drop: function (event, ui) {
+                    //if reset 
+                    let el = $(this);
+                    let parent = $(this).parent();
+                    let dragged = $(ui.draggable);
+                    //classの初期化
+                    $(el).removeClass();
+                    $(el).addClass('balloon');
+                    $(el).css('background', '');
+                    $(el).parent().removeClass();
+                    $(el).parent().addClass('talk-area-badge');
+                    if (dragged.attr('id') == 'reset') {
+                        //no operation
+                    } else {
+                        let clzArry = $(dragged).attr("class").split(" ");
+                        $.each(clzArry, function (index, value) {
+                            el.addClass(value);
+                            parent.addClass(value);
+                        })
+                        $(this).removeClass('tag');
+                        $(parent).removeClass('tag');
+                        $(this).css('background-color', $(dragged).css('background-color'));
+                    }
                 }
-            },
-            accept: ".tag"
-        });
-    }
-
-    $('.hw_details').on('toggle', function () {
-        getSmmry('hw');
+            });
+        }
     });
-    $('.tbc_details').on('toggle', function () {
-        getSmmry('tbc');
-    });
-    $('.reload').on('click', function () {
-        getSmmry('hw');
-        getSmmry('tbc');
-    })
-    function getSmmry(clazz) {
-        $('.' + clazz + '_details').children('').not('summary').remove();
-        $('.' + clazz + '-fukidasi').each(function () {
-            let cln = $(this).clone();
-            $(cln).attr('contenteditable', 'false');
-            $('.' + clazz + '_details').append(cln);
-        });
-    }
 
 });
