@@ -105,7 +105,7 @@ hr {
     height: 50px;
     width: 50px;
     border: solid 1px;
-    border-radius: 100%;
+    border-radius: 15px;
     border-color: #FFFFFF;
     background-color: gray;
     margin: 0 5 0 5;
@@ -262,16 +262,16 @@ hr {
 .tate {
     position: absolute;
     background-color: #FFFFFF;
-    width: 30px;
-    height: 5px;
+    width: 90%;
+    height: 3px;
     border-radius: 10px;
 }
 
 .yoko {
     position: absolute;
     background-color: #FFFFFF;
-    width: 5px;
-    height: 30px;
+    width: 3px;
+    height: 90%;
     border-radius: 10px;
 }
 
@@ -420,4 +420,23 @@ input[type=radio]:checked+.slct_tab_nav {
     background-color: aliceblue;
     display: flex;
     align-items: center;
+}
+
+.round_btn {
+    display: flex;
+    position: relative;
+    margin-left: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: gray;
+    top: 0;
+    right: 0;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(45deg);
+}
+
+.round_btn:hover {
+    opacity: 75%;
 }

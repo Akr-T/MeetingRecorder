@@ -1,4 +1,9 @@
 $(function () {
+    //delete element
+    $(document).on('click', '.round_btn', function () {
+        $(this).parent().remove();
+    });
+
     //load csv
     $("input[type='file']").on('change', function () {
         let file = $(this)[0].files[0];
@@ -39,7 +44,7 @@ $(function () {
         var snapshot = new XMLSerializer().serializeToString(document);
         let blob = new Blob([snapshot], { type: 'text/html' });
         a = document.createElement('a');
-        a.download = 'MeetRecord.html';
+        a.download = $(".talk-area-head").text() + '_MeetRecord.html';
         a.href = URL.createObjectURL(blob);
         a.click();
         $("input").not("input[type='radio']").prop('disabled', false);
@@ -104,7 +109,13 @@ $(function () {
             $(addTrgt).css('color', $(ui.draggable).css('color'));
             $(addTrgt).css('background-color', $(ui.draggable).css('background-color'));
             $(addTrgt).wrap('<div class="talk-area-badge" />');
+            // $(addTrgt).after('<span class="round_btn"></span>');
+            $(addTrgt).after('<span class="round_btn"><span class="tate"></span><span class="yoko"></span></span>');
+
+
+
             $(addTrgt).after('<div class="balloon" contenteditable="true">ADD</div>');
+
 
             $(this).animate({
                 scrollTop: $(document).height()
