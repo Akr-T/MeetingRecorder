@@ -4,6 +4,57 @@ $(function () {
         $(this).parent().remove();
     });
 
+    $(document).on('click', '.pos_rltv>.badge', function () {
+        let addTrgt = $(this).clone();
+        //remove class
+        $(addTrgt).removeClass();
+        //remove style
+        $(addTrgt).attr('style', '');
+
+        //add target to talk area
+        $(addTrgt).appendTo("#all_content");
+        $(addTrgt).addClass('badge');
+        $(addTrgt).css('color', $(this).css('color'));
+        $(addTrgt).css('background-color', $(this).css('background-color'));
+        $(addTrgt).wrap('<div class="talk-area-badge" />');
+        $(addTrgt).after('<span class="round_btn"><span class="tate"></span><span class="yoko"></span></span>');
+        $(addTrgt).after('<div class="balloon" contenteditable="true"></div>');
+
+        $("#all_content").animate({
+            scrollTop: $("#all_content")[0].scrollHeight
+        }, 300);
+
+        //tag attach setting
+        let balloon = $(addTrgt).parent().children('.balloon');
+        balloon.droppable({
+            accept: ".tag",
+            drop: function (event, ui) {
+                //if reset 
+                let el = $(this);
+                let parent = $(this).parent();
+                let dragged = $(ui.draggable);
+                //classの初期化
+                $(el).removeClass();
+                $(el).addClass('balloon');
+                $(el).css('background', '');
+                $(el).parent().removeClass();
+                $(el).parent().addClass('talk-area-badge');
+                if (dragged.attr('id') == 'reset') {
+                    //no operation
+                } else {
+                    let clzArry = $(dragged).attr("class").split(" ");
+                    $.each(clzArry, function (index, value) {
+                        el.addClass(value);
+                        parent.addClass(value);
+                    })
+                    $(this).removeClass('tag');
+                    $(parent).removeClass('tag');
+                    $(this).css('background-color', $(dragged).css('background-color'));
+                }
+            }
+        });
+    });
+
     //load csv
     $("input[type='file']").on('change', function () {
         let file = $(this)[0].files[0];
@@ -60,10 +111,15 @@ $(function () {
         let nm = $(".nm").val();
         let fntclr = $(".fnt-clr").val();
         let bgclr = $(".bg-clr").val();
-        let addObj = '<span class="badge" style="color:' + fntclr + ';background-color: ' + bgclr + '; ">'
+        let addObj = ''
+            + '<div class="pos_rltv">'
+            + '<span class="badge" style="color:' + fntclr + ';background-color: ' + bgclr + '; ">'
             + nm
-            + '</span>';
+            + '</span>'
+            + '<span class="round_btn"><span class="tate"></span><span class="yoko"></span></span>'
+            + '</div>';
         $(addObj).appendTo(".badge-area");
+
         //clear val
         $(".nm").val("");
 
@@ -109,12 +165,8 @@ $(function () {
             $(addTrgt).css('color', $(ui.draggable).css('color'));
             $(addTrgt).css('background-color', $(ui.draggable).css('background-color'));
             $(addTrgt).wrap('<div class="talk-area-badge" />');
-            // $(addTrgt).after('<span class="round_btn"></span>');
             $(addTrgt).after('<span class="round_btn"><span class="tate"></span><span class="yoko"></span></span>');
-
-
-
-            $(addTrgt).after('<div class="balloon" contenteditable="true">ADD</div>');
+            $(addTrgt).after('<div class="balloon" contenteditable="true"></div>');
 
 
             $(this).animate({

@@ -440,3 +440,13 @@ input[type=radio]:checked+.slct_tab_nav {
 .round_btn:hover {
     opacity: 75%;
 }
+
+.pos_rltv {
+    position: relative;
+}
+
+.pos_rltv>.round_btn {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+}
