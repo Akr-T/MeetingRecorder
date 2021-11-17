@@ -170,7 +170,7 @@ $(function () {
 
 
             $(this).animate({
-                scrollTop: $(document).height()
+                scrollTop: $("#all_content")[0].scrollHeight
             }, 300);
 
             //tag attach setting
@@ -204,5 +204,4 @@ $(function () {
             });
         }
     });
-
 });
